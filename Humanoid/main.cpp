@@ -11,22 +11,24 @@ void main()
 	Steps steps;
 
 	SetFootsteps( &steps );
+	ReviseStepDirection( &steps );
 	SetAllCP( &steps );
-	SetAllZMP( &steps );
+	SetAllZmp( &steps );
 
 	//Trajectory Calculation
 	Trajectories trajectories( &steps );
 	
-	SetDiscreteZMP( &trajectories, &steps );
+	SetZmpTrajectory( &trajectories, &steps );
 	SetFootTrajectory( &trajectories, &steps );
-	SetDiscreteCOM( &trajectories );
+	SetFootDirection( &trajectories, &steps );
+	SetComTrajectory( &trajectories );
+	SetComDirection( &trajectories );
 	TrajectoriesWriteFile( &trajectories );
 
 	//Inverse Kinematics Calculation
 	Configurations configurations;
 
 	
-
 
 	system("pause");
 }

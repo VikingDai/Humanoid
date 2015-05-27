@@ -11,21 +11,25 @@ Trajectories::Trajectories( Steps *steps )
 	left_foot.resize(3, TotalTimeFrame);
 	right_foot.resize(3, TotalTimeFrame);
 
+	com_direction.resize(TotalTimeFrame);
+	left_foot_direction.resize(TotalTimeFrame);
+	right_foot_direction.resize(TotalTimeFrame);
+
 	zmp.setZero();
 	com.setZero();
 	left_foot.setZero();
 	right_foot.setZero();
 
-	GetSplineVec(&zmp_spline_vec, DoublePhaseTimeFrame, ZMP_SplineType);
+	GetSplineVec(&zmp_spline_vec, DoublePhaseTimeFrame, ZmpSplineType);
 	GetSplineVec(&foot_spline_vec, SinglePhaseTimeFrame, FootTrajectorySplineType);
 	GetSwingVec(&foot_swing_vec, SinglePhaseTimeFrame);
 }
 
-string SetDiscreteZMP( Trajectories *trajectories, Steps *steps )
+string SetZmpTrajectory( Trajectories *trajectories, Steps *steps )
 {
-	cout << "Calculating descrete ZMP points..." << endl;
-
 	string err;
+	cout << "Calculating Zmp trajectory..." << endl;
+
 	int time_flag = PrepareTimeFrame;
 	int num_steps = steps->size();
 
@@ -77,44 +81,17 @@ string SetDiscreteZMP( Trajectories *trajectories, Steps *steps )
 
 	return err;
 }
-string SetDiscreteCOM( Trajectories *trajectories )
-{
-	cout << "Calculating descrete COM points..." << endl;
-
-	string err;
-	
-	// temp acceptable solution for com 
-	trajectories->com.row(0) = 0.5 * (trajectories->left_foot.row(0) + trajectories->right_foot.row(0));
-	trajectories->com.row(1).setConstant(10);
-	trajectories->com.row(2).setConstant(COM_Height);
-
-	// com trajectory legal test
-	if(0){
-	// TODO
-	// check if the com trajectory generated is legal
-	// if not legal, set error message to err
-	}
-	else 
-		err = "SUCCESS";
-
-	return err;
-}
 string SetFootTrajectory( Trajectories *trajectories, Steps *steps )
 {
-	cout << "Calculating foot trajectory points..." << endl;
-
 	string err;
+	cout << "Calculating foot trajectory..." << endl;
+
 	int num_steps = steps->size();
 	int time_flag = PrepareTimeFrame;
 
 	
 	VectorXd single_ones_vec = VectorXd(SinglePhaseTimeFrame).setOnes();
 	VectorXd double_ones_vec = VectorXd(DoublePhaseTimeFrame).setOnes();
-
-	trajectories->left_foot.row(0).setZero();
-	trajectories->right_foot.row(0).setZero();
-	trajectories->left_foot.row(1).setZero();
-	trajectories->right_foot.row(1).setZero();
 
 
 	// ex. 6 footstep = 4 steps = (d+s+d) + (s+d) + (s+d) + (s+d) = d + (s+d)*4
@@ -205,10 +182,130 @@ string SetFootTrajectory( Trajectories *trajectories, Steps *steps )
 	
 
 
-	// zmp trajectory legal test
+	// foot trajectory legal test
 	if(0){
 	// TODO
-	// check if the zmp trajectory generated is legal
+	// check if the foot trajectory generated is legal
+	// if not legal, set error message to err
+	}
+	else 
+		err = "SUCCESS";
+
+	return err;
+}
+string SetFootDirection( Trajectories *trajectories, Steps *steps )
+{
+	string err;
+	cout << "Calculating foot direction..." << endl;
+
+	int num_steps = steps->size();
+	int time_flag = PrepareTimeFrame;
+
+	
+	VectorXd single_ones_vec = VectorXd(SinglePhaseTimeFrame).setOnes();
+	VectorXd double_ones_vec = VectorXd(DoublePhaseTimeFrame).setOnes();
+
+
+	// ex. 6 footstep = 4 steps = (d+s+d) + (s+d) + (s+d) + (s+d) = d + (s+d)*4
+	// supposed we swing the right foot first, and if it's not true, switch it back in the end
+	for(int i=0; i<num_steps-2; i++){
+		// first double phase move
+		if(i==0){
+			trajectories->right_foot_direction.segment(time_flag,DoublePhaseTimeFrame).setConstant((*steps)[0]->direction_);
+			trajectories->left_foot_direction.segment(time_flag,DoublePhaseTimeFrame).setConstant((*steps)[1]->direction_);
+			
+			time_flag += DoublePhaseTimeFrame;
+		}
+
+		
+		if(i%2 == 0) {	// if swinging the right foot in this step
+			// single phase in every step
+			trajectories->right_foot_direction.segment(time_flag,SinglePhaseTimeFrame) = (*steps)[i]->direction_ * single_ones_vec + ((*steps)[i+2]->direction_ - (*steps)[i]->direction_) * trajectories->foot_spline_vec;
+			trajectories->left_foot_direction.segment(time_flag,SinglePhaseTimeFrame).setConstant((*steps)[i+1]->direction_);
+
+
+			time_flag += SinglePhaseTimeFrame;
+
+			// double phase in every step
+			trajectories->right_foot_direction.segment(time_flag,SinglePhaseTimeFrame).setConstant((*steps)[i+2]->direction_);
+			trajectories->left_foot_direction.segment(time_flag,SinglePhaseTimeFrame).setConstant((*steps)[i+1]->direction_);
+
+			time_flag += DoublePhaseTimeFrame;
+		} 
+		else {	// if swinging the left foot in this step
+			// single phase in every step
+			trajectories->right_foot_direction.segment(time_flag,SinglePhaseTimeFrame).setConstant((*steps)[i+1]->direction_);
+			trajectories->left_foot_direction.segment(time_flag,SinglePhaseTimeFrame) = (*steps)[i]->direction_ * single_ones_vec + ((*steps)[i+2]->direction_ - (*steps)[i]->direction_) * trajectories->foot_spline_vec;
+
+
+
+			time_flag += SinglePhaseTimeFrame;
+
+			// double phase in every step
+			trajectories->right_foot_direction.segment(time_flag,SinglePhaseTimeFrame).setConstant((*steps)[i+1]->direction_);
+			trajectories->left_foot_direction.segment(time_flag,SinglePhaseTimeFrame).setConstant((*steps)[i+2]->direction_);
+
+			time_flag += DoublePhaseTimeFrame;
+		}
+	}
+
+	trajectories->right_foot_direction.head(PrepareTimeFrame).setConstant(trajectories->right_foot_direction(PrepareTimeFrame));
+	trajectories->left_foot_direction.head(PrepareTimeFrame).setConstant(trajectories->left_foot_direction(PrepareTimeFrame));
+
+	trajectories->right_foot_direction.tail(HoldTimeFrame).setConstant(trajectories->right_foot_direction(TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->left_foot_direction.tail(HoldTimeFrame).setConstant(trajectories->left_foot_direction(TotalTimeFrame - HoldTimeFrame -1));
+
+
+	////////////////////////////if(strcmp((*steps)[0]->foot_,"right")) { // if right foot is the first swing leg/////////////////////////////////////////////////////////////////////////////////////
+
+	
+
+
+	// foot direction legal test
+	if(0){
+	// TODO
+	// check if the foot direction generated is legal
+	// if not legal, set error message to err
+	}
+	else 
+		err = "SUCCESS";
+
+	return err;
+}
+string SetComTrajectory( Trajectories *trajectories )
+{
+	string err;
+	cout << "Calculating Com trajectory..." << endl;
+
+	// temp acceptable solution for com 
+	trajectories->com.row(0) = 0.5 * (trajectories->left_foot.row(0) + trajectories->right_foot.row(0));
+	trajectories->com.row(1) = 0.5 * (trajectories->left_foot.row(1) + trajectories->right_foot.row(1));
+	trajectories->com.row(2).setConstant(ComHeight);
+
+	// com trajectory legal test
+	if(0){
+	// TODO
+	// check if the com trajectory generated is legal
+	// if not legal, set error message to err
+	}
+	else 
+		err = "SUCCESS";
+
+	return err;
+}
+string SetComDirection( Trajectories *trajectories )
+{
+	string err;
+	cout << "Calculating Com direction..." << endl;
+	
+
+	trajectories->com_direction = 0.5 * (trajectories->left_foot_direction + trajectories->right_foot_direction);
+
+
+	// Com direction legal test
+	if(0){
+	// TODO
+	// check if the Com direction generated is legal
 	// if not legal, set error message to err
 	}
 	else 
@@ -292,14 +389,20 @@ void GetSwingVec(VectorXd *swing_vec, int vec_length)
 }
 void TrajectoriesWriteFile( Trajectories *trajectories )
 {
-	EigenWriteFile(trajectories->zmp_spline_vec, "cpp_zmp_spline_vec", WriteFilePath);
-	EigenWriteFile(trajectories->foot_spline_vec, "cpp_foot_spline_vec", WriteFilePath);
-	EigenWriteFile(trajectories->foot_swing_vec, "cpp_foot_swing_vec", WriteFilePath);
-
+	
 	EigenWriteFile(trajectories->zmp, "cpp_zmp", WriteFilePath);
 	EigenWriteFile(trajectories->com, "cpp_com", WriteFilePath);
 	EigenWriteFile(trajectories->left_foot, "cpp_left_foot", WriteFilePath);
 	EigenWriteFile(trajectories->right_foot, "cpp_right_foot", WriteFilePath);
+
+	EigenWriteFile(trajectories->com_direction, "cpp_com_direction", WriteFilePath);
+	EigenWriteFile(trajectories->left_foot_direction, "cpp_left_foot_direction", WriteFilePath);
+	EigenWriteFile(trajectories->right_foot_direction, "cpp_right_foot_direction", WriteFilePath);
+
+	EigenWriteFile(trajectories->zmp_spline_vec, "cpp_zmp_spline_vec", WriteFilePath);
+	EigenWriteFile(trajectories->foot_spline_vec, "cpp_foot_spline_vec", WriteFilePath);
+	EigenWriteFile(trajectories->foot_swing_vec, "cpp_foot_swing_vec", WriteFilePath);
+
 }
 void EigenWriteFile( VectorXd vector, string file, string path )
 {

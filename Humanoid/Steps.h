@@ -5,6 +5,7 @@
 #include <vector>
 #include <math.h>
 #include <Eigen/Dense>
+#include "Util.h"
 using namespace std;
 using namespace Eigen;
 
@@ -18,16 +19,16 @@ const double	FootWidth = 10;
 // SetAllCP() Parameters
 const int		MaxPreviewSteps = 3;
 const int		CP_Offset = 5;
-// SetAllZMP() Pamameters
+// SetAllZmp() Pamameters
 const double	StepTime = 0.8;
 const double	GravityConst = 980.665;		// 9.80665 m/s2 = 980.665 cm/s2
-const double	COM_Height = 100;
-const double	Omega = pow(GravityConst/COM_Height, 0.5);
+const double	ComHeight = 100;
+const double	Omega = pow(GravityConst/ComHeight, 0.5);
 
 
 struct Step {
-	int			foot_;	// left: 0, right: 1
-	double		theta_;
+	bool		is_right_foot_;	// left: 0, right: 1
+	double		direction_;
 	Vector2d	position_;
 	Vector2d	cp_init_;
 	Vector2d	cp_end_;
@@ -35,14 +36,15 @@ struct Step {
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	//constructor
-	Step(int foot, double theta, Vector2d& position);
+	Step(bool is_right_foot, double direction, Vector2d& position);
 };
 
 typedef vector<Step*> Steps;
 
 string SetFootsteps( Steps *steps );
+string ReviseStepDirection( Steps *steps );
 string SetAllCP( Steps *steps );
-string SetAllZMP( Steps *steps );
+string SetAllZmp( Steps *steps );
 void PrintAllSteps( const Steps *steps );
 
 #endif /*_STEPS_H_*/

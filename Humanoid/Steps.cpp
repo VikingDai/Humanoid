@@ -1,9 +1,9 @@
 #include "Steps.h"
 
-Step::Step( int foot, double theta, Vector2d& position )
+Step::Step( bool is_right_foot, double direction, Vector2d& position )
 {
-	foot_ = foot;
-	theta_ = theta;
+	is_right_foot_ = is_right_foot;
+	direction_ = direction;
 	position_ = position;
 	cp_init_.setZero();
 	cp_end_.setZero();
@@ -24,20 +24,30 @@ string SetFootsteps( Steps *steps )
 			break;
 
 		case 1:
-			cout << "Creating simple straight 10 footsteps..." << endl;
+			cout << "Creating straight 10 walking steps..." << endl;
 			steps->resize(10);
-			(*steps)[0] = new Step( 1, 0, Vector2d(0, 0));
-     		(*steps)[1] = new Step( 0, 0, Vector2d(0, 20));
-     		(*steps)[2] = new Step( 1, 0, Vector2d(25, 0));
-     		(*steps)[3] = new Step( 0, 0, Vector2d(50, 20));
-     		(*steps)[4] = new Step( 1, 0, Vector2d(75, 0));
-     		(*steps)[5] = new Step( 0, 0, Vector2d(100, 20));
-     		(*steps)[6] = new Step( 1, 0, Vector2d(125, 0)); 
-     		(*steps)[7] = new Step( 0, 0, Vector2d(150, 20));
-			(*steps)[8] = new Step( 1, 0, Vector2d(175,0));
-			(*steps)[9] = new Step( 0, 0, Vector2d(175, 20));
+			(*steps)[0] = new Step( true,	0, Vector2d(0, 0)	);
+     		(*steps)[1] = new Step( false,	0, Vector2d(0, 20)	);
+     		(*steps)[2] = new Step( true,	0, Vector2d(25, 0)	);
+     		(*steps)[3] = new Step( false,	0, Vector2d(50, 20)	);
+     		(*steps)[4] = new Step( true,	0, Vector2d(75, 0)	);
+     		(*steps)[5] = new Step( false,	0, Vector2d(100, 20));
+     		(*steps)[6] = new Step( true,	0, Vector2d(125, 0)	); 
+     		(*steps)[7] = new Step( false,	0, Vector2d(150, 20));
+			(*steps)[8] = new Step( true,	0, Vector2d(175,0)	);
+			(*steps)[9] = new Step( false,	0, Vector2d(175, 20));
 			break;
+		case 2:
+			cout << "Creating curve 6 walking steps..." << endl;
+			steps->resize(6);
+			(*steps)[0] = new Step( false,	-0.75*pi,	Vector2d(10, -10)	);
+     		(*steps)[1] = new Step( true,	-0.75*pi,	Vector2d(-5, 5	)	);
+     		(*steps)[2] = new Step( false,	-0.8*pi,	Vector2d(-20, -30)	);
+     		(*steps)[3] = new Step( true,	-0.95*pi,	Vector2d(-55, -20)	);
+     		(*steps)[4] = new Step( false,	 0.9*pi,	Vector2d(-90, -30)	);
+     		(*steps)[5] = new Step( true,	 0.9*pi,	Vector2d(-85, -10)	);
 
+			break;
 		default:
 			method = -1;
 			break;
@@ -60,11 +70,43 @@ string SetFootsteps( Steps *steps )
 	return err;
 
 }
+string ReviseStepDirection( Steps *steps )
+{
+	string err;
+	cout << "Revise step direction..." << endl;
+	
+	int num_steps = steps->size();
+	double n;
+	//modify the first stepping foot direction
+	for(int i=0; i<num_steps-2; i=i+2){
+		n = round(((*steps)[i+2]->direction_ - (*steps)[i]->direction_) / (2*pi));
+		(*steps)[i+2]->direction_ -= 2 * pi * n;
+	}
+
+	//modify the second stepping foot direction
+	for(int i=1; i<num_steps-2; i=i+2){
+		n = round(((*steps)[i+2]->direction_ - (*steps)[i]->direction_) / (2*pi));
+		(*steps)[i+2]->direction_ -= 2 * pi * n;
+	}
+
+
+	// step direction legal test
+	if(0){
+	// TODO
+	// check if all step direction generated is legal
+	// if not legal, set error message to err
+	}
+	else 
+		err = "SUCCESS";
+
+	return err;
+
+}
 string SetAllCP( Steps *steps )
 {
-	cout << "Calculating CPs of all footsteps..." << endl;
-
 	string err;
+	cout << "Calculating Cp in each footstep..." << endl;
+
 	//num_steps = steps.size();
 	int num_steps = steps->size();
 	int PreviewSteps = MaxPreviewSteps;
@@ -104,13 +146,12 @@ string SetAllCP( Steps *steps )
 	return err;
 
 }
-string SetAllZMP( Steps *steps)
+string SetAllZmp( Steps *steps)
 {
-	cout << "Calculating ZMPs of all footsteps..." << endl;
-
 	string err;
-	int num_steps = steps->size();
+	cout << "Calculating Zmp in each footstep..." << endl;
 
+	int num_steps = steps->size();
 
 	for(int i=0; i<num_steps; i++){
 		if(i == num_steps-1) //if last step
@@ -122,10 +163,10 @@ string SetAllZMP( Steps *steps)
 	}
 
 
-	// ZMP legal test
+	// Zmp legal test
 	if(0){
 	// TODO
-	// check if the ZMP generated is legal
+	// check if the Zmp generated is legal
 	// for example, zmp should be inside the polygon
 	// if not legal, set error message to err
 	}
@@ -139,8 +180,8 @@ void PrintAllSteps( const Steps *steps )
 {
 	for(unsigned int i=0; i<steps->size(); i++){
 		cout << i << " step:" << endl;
-		cout << (*steps)[i]->foot_ << endl;
-		cout << (*steps)[i]->theta_ << endl;
+		cout << (*steps)[i]->is_right_foot_ << endl;
+		cout << (*steps)[i]->direction_ << endl;
 		cout << (*steps)[i]->position_.transpose() << endl; 
 		cout << (*steps)[i]->cp_init_.transpose() << endl;
 		cout << (*steps)[i]->cp_end_.transpose() << endl;

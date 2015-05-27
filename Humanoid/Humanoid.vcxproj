@@ -73,11 +73,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Steps.cpp" />
     <ClCompile Include="Trajectories.cpp" />
+    <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Kinematics.h" />
     <ClInclude Include="Steps.h" />
     <ClInclude Include="Trajectories.h" />
+    <ClInclude Include="Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

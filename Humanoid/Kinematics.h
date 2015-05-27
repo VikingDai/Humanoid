@@ -1,7 +1,6 @@
 #ifndef _KINEMATICS_H_
 #define _KINEMATICS_H_
 
-#include <vector>
 #include <Eigen/Dense>
 #include "Trajectories.h"
 using namespace std;
@@ -14,40 +13,37 @@ const double ThighLength = 26;
 const double ShinLength = 22;
 const double AnkleHeight = 20;
 
-struct Configuration {
-	double angle_com;
-	double angle_trunk_yaw;
-	double angle_waist;
+struct Configurations {
+	VectorXd angle_trunk_yaw;
+	VectorXd angle_waist;
 
-	double angle_left_hip_yaw;
-	double angle_left_hip_roll;
-	double angle_left_hip_pitch;
-	double angle_legt_knee;
-	double angle_left_ankle_pitch;
-	double angle_left_ankle_roll;
+	VectorXd angle_left_hip_yaw;
+	VectorXd angle_left_hip_roll;
+	VectorXd angle_left_hip_pitch;
+	VectorXd angle_legt_knee;
+	VectorXd angle_left_ankle_pitch;
+	VectorXd angle_left_ankle_roll;
 
-	double angle_right_hip_yaw;
-	double angle_right_hip_roll;
-	double angle_right_hip_pitch;
-	double angle_right_knee;
-	double angle_right_ankle_pitch;
-	double angle_right_ankle_roll;
+	VectorXd angle_right_hip_yaw;
+	VectorXd angle_right_hip_roll;
+	VectorXd angle_right_hip_pitch;
+	VectorXd angle_right_knee;
+	VectorXd angle_right_ankle_pitch;
+	VectorXd angle_right_ankle_roll;
 
-	Vector3d target_com;
-	Vector3d target_left_foot;
-	Vector3d target_right_foot;
+	//MatrixXd target_com;
+	//MatrixXd target_left_foot;
+	//MatrixXd target_right_foot;
 	
-	//Vector3d actual_com;
-	//Vector3d actual_left_foot;
-	//Vector3d actual_right_foot;
-	//EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	//MatrixXd actual_com;
+	//MatrixXd actual_left_foot;
+	//MatrixXd actual_right_foot;
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	//constructor
-	Configuration(int a);
-
+	Configurations();
 };
 
-typedef vector<Configuration*> Configurations;
 
 
 
