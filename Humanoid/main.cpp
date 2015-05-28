@@ -28,7 +28,7 @@ void main()
 	//Inverse Kinematics Calculation
 	Configurations configurations;
 
-	
+	yoooooooooooooooooooo
 
 	system("pause");
 }
