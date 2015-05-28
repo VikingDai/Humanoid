@@ -44,8 +44,8 @@ struct Configurations {
 	Configurations();
 };
 
-
-
+string SetAngleTrunkYaw( Configurations *configurations );
+string SetAngleWaist( Configurations *configurations );
 
 
 
