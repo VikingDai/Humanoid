@@ -1,31 +1,25 @@
 #include "Trajectories.h"
 
-
 Trajectories::Trajectories( Steps *steps )
 {
 	int num_steps = steps->size();
 	TotalTimeFrame = PrepareTimeFrame + DoublePhaseTimeFrame + (SinglePhaseTimeFrame + DoublePhaseTimeFrame) * (num_steps - 2) + HoldTimeFrame;
 
-	zmp.resize(3, TotalTimeFrame);
-	com.resize(3, TotalTimeFrame);
-	left_foot.resize(3, TotalTimeFrame);
-	right_foot.resize(3, TotalTimeFrame);
+	zmp						= MatrixXd::Zero(3, TotalTimeFrame);
+	com						= MatrixXd::Zero(3, TotalTimeFrame);
+	left_foot				= MatrixXd::Zero(3, TotalTimeFrame);
+	right_foot				= MatrixXd::Zero(3, TotalTimeFrame);
 
-	com_direction.resize(TotalTimeFrame);
-	left_foot_direction.resize(TotalTimeFrame);
-	right_foot_direction.resize(TotalTimeFrame);
-
-	zmp.setZero();
-	com.setZero();
-	left_foot.setZero();
-	right_foot.setZero();
+	com_direction			= VectorXd::Zero(TotalTimeFrame);
+	left_foot_direction		= VectorXd::Zero(TotalTimeFrame);
+	right_foot_direction	= VectorXd::Zero(TotalTimeFrame);
 
 	GetSplineVec(&zmp_spline_vec, DoublePhaseTimeFrame, ZmpSplineType);
 	GetSplineVec(&foot_spline_vec, SinglePhaseTimeFrame, FootTrajectorySplineType);
 	GetSwingVec(&foot_swing_vec, SinglePhaseTimeFrame);
 }
 
-string SetZmpTrajectory( Trajectories *trajectories, Steps *steps )
+string DesignZmpTrajectory( Trajectories *trajectories, Steps *steps )
 {
 	string err;
 	cout << "Calculating Zmp trajectory..." << endl;
@@ -33,8 +27,8 @@ string SetZmpTrajectory( Trajectories *trajectories, Steps *steps )
 	int time_flag = PrepareTimeFrame;
 	int num_steps = steps->size();
 
-	VectorXd single_ones_vec = VectorXd(SinglePhaseTimeFrame).setOnes();
-	VectorXd double_ones_vec = VectorXd(DoublePhaseTimeFrame).setOnes();
+	VectorXd single_ones_vec = VectorXd::Ones(SinglePhaseTimeFrame);
+	VectorXd double_ones_vec = VectorXd::Ones(DoublePhaseTimeFrame);
 
 	// Supposed the robot is walking on flat plane!
 	trajectories->zmp.row(2).setZero();
@@ -66,8 +60,8 @@ string SetZmpTrajectory( Trajectories *trajectories, Steps *steps )
 	trajectories->zmp.row(0).head(PrepareTimeFrame).setConstant(trajectories->zmp(0, PrepareTimeFrame));
 	trajectories->zmp.row(1).head(PrepareTimeFrame).setConstant(trajectories->zmp(1, PrepareTimeFrame));
 
-	trajectories->zmp.row(0).tail(HoldTimeFrame).setConstant(trajectories->zmp(0, TotalTimeFrame - HoldTimeFrame -1));
-	trajectories->zmp.row(1).tail(HoldTimeFrame).setConstant(trajectories->zmp(1, TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->zmp.row(0).tail(HoldTimeFrame).setConstant(trajectories->zmp(0, trajectories->TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->zmp.row(1).tail(HoldTimeFrame).setConstant(trajectories->zmp(1, trajectories->TotalTimeFrame - HoldTimeFrame -1));
 
 
 	// zmp trajectory legal test
@@ -81,7 +75,7 @@ string SetZmpTrajectory( Trajectories *trajectories, Steps *steps )
 
 	return err;
 }
-string SetFootTrajectory( Trajectories *trajectories, Steps *steps )
+string DesignFootTrajectory( Trajectories *trajectories, Steps *steps )
 {
 	string err;
 	cout << "Calculating foot trajectory..." << endl;
@@ -90,8 +84,8 @@ string SetFootTrajectory( Trajectories *trajectories, Steps *steps )
 	int time_flag = PrepareTimeFrame;
 
 	
-	VectorXd single_ones_vec = VectorXd(SinglePhaseTimeFrame).setOnes();
-	VectorXd double_ones_vec = VectorXd(DoublePhaseTimeFrame).setOnes();
+	VectorXd single_ones_vec = VectorXd::Ones(SinglePhaseTimeFrame);
+	VectorXd double_ones_vec = VectorXd::Ones(DoublePhaseTimeFrame);
 
 
 	// ex. 6 footstep = 4 steps = (d+s+d) + (s+d) + (s+d) + (s+d) = d + (s+d)*4
@@ -167,13 +161,13 @@ string SetFootTrajectory( Trajectories *trajectories, Steps *steps )
 	trajectories->left_foot.row(1).head(PrepareTimeFrame).setConstant(trajectories->left_foot(1, PrepareTimeFrame));
 	trajectories->left_foot.row(2).head(PrepareTimeFrame).setConstant(trajectories->left_foot(2, PrepareTimeFrame));
 
-	trajectories->right_foot.row(0).tail(HoldTimeFrame).setConstant(trajectories->right_foot(0, TotalTimeFrame - HoldTimeFrame -1));
-	trajectories->right_foot.row(1).tail(HoldTimeFrame).setConstant(trajectories->right_foot(1, TotalTimeFrame - HoldTimeFrame -1));
-	trajectories->right_foot.row(2).tail(HoldTimeFrame).setConstant(trajectories->right_foot(2, TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->right_foot.row(0).tail(HoldTimeFrame).setConstant(trajectories->right_foot(0, trajectories->TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->right_foot.row(1).tail(HoldTimeFrame).setConstant(trajectories->right_foot(1, trajectories->TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->right_foot.row(2).tail(HoldTimeFrame).setConstant(trajectories->right_foot(2, trajectories->TotalTimeFrame - HoldTimeFrame -1));
 
-	trajectories->left_foot.row(0).tail(HoldTimeFrame).setConstant(trajectories->left_foot(0, TotalTimeFrame - HoldTimeFrame -1));
-	trajectories->left_foot.row(1).tail(HoldTimeFrame).setConstant(trajectories->left_foot(1, TotalTimeFrame - HoldTimeFrame -1));
-	trajectories->left_foot.row(2).tail(HoldTimeFrame).setConstant(trajectories->left_foot(2, TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->left_foot.row(0).tail(HoldTimeFrame).setConstant(trajectories->left_foot(0, trajectories->TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->left_foot.row(1).tail(HoldTimeFrame).setConstant(trajectories->left_foot(1, trajectories->TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->left_foot.row(2).tail(HoldTimeFrame).setConstant(trajectories->left_foot(2, trajectories->TotalTimeFrame - HoldTimeFrame -1));
 
 
 
@@ -193,7 +187,7 @@ string SetFootTrajectory( Trajectories *trajectories, Steps *steps )
 
 	return err;
 }
-string SetFootDirection( Trajectories *trajectories, Steps *steps )
+string DesignFootDirection( Trajectories *trajectories, Steps *steps )
 {
 	string err;
 	cout << "Calculating foot direction..." << endl;
@@ -202,8 +196,8 @@ string SetFootDirection( Trajectories *trajectories, Steps *steps )
 	int time_flag = PrepareTimeFrame;
 
 	
-	VectorXd single_ones_vec = VectorXd(SinglePhaseTimeFrame).setOnes();
-	VectorXd double_ones_vec = VectorXd(DoublePhaseTimeFrame).setOnes();
+	VectorXd single_ones_vec = VectorXd::Ones(SinglePhaseTimeFrame);
+	VectorXd double_ones_vec = VectorXd::Ones(DoublePhaseTimeFrame);
 
 
 	// ex. 6 footstep = 4 steps = (d+s+d) + (s+d) + (s+d) + (s+d) = d + (s+d)*4
@@ -252,8 +246,8 @@ string SetFootDirection( Trajectories *trajectories, Steps *steps )
 	trajectories->right_foot_direction.head(PrepareTimeFrame).setConstant(trajectories->right_foot_direction(PrepareTimeFrame));
 	trajectories->left_foot_direction.head(PrepareTimeFrame).setConstant(trajectories->left_foot_direction(PrepareTimeFrame));
 
-	trajectories->right_foot_direction.tail(HoldTimeFrame).setConstant(trajectories->right_foot_direction(TotalTimeFrame - HoldTimeFrame -1));
-	trajectories->left_foot_direction.tail(HoldTimeFrame).setConstant(trajectories->left_foot_direction(TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->right_foot_direction.tail(HoldTimeFrame).setConstant(trajectories->right_foot_direction(trajectories->TotalTimeFrame - HoldTimeFrame -1));
+	trajectories->left_foot_direction.tail(HoldTimeFrame).setConstant(trajectories->left_foot_direction(trajectories->TotalTimeFrame - HoldTimeFrame -1));
 
 
 	////////////////////////////if(strcmp((*steps)[0]->foot_,"right")) { // if right foot is the first swing leg/////////////////////////////////////////////////////////////////////////////////////
@@ -272,7 +266,7 @@ string SetFootDirection( Trajectories *trajectories, Steps *steps )
 
 	return err;
 }
-string SetComTrajectory( Trajectories *trajectories )
+string DesignComTrajectory( Trajectories *trajectories )
 {
 	string err;
 	cout << "Calculating Com trajectory..." << endl;
@@ -293,7 +287,7 @@ string SetComTrajectory( Trajectories *trajectories )
 
 	return err;
 }
-string SetComDirection( Trajectories *trajectories )
+string DesignComDirection( Trajectories *trajectories )
 {
 	string err;
 	cout << "Calculating Com direction..." << endl;
@@ -342,7 +336,7 @@ void GetSplineVec(VectorXd *spline_vec, int vec_length, int spline_type)
 		S = A.inverse() * B;
 
 		for(double i=0; i<vec_length; i++){
-			(*spline_vec)((int)i) = S(0) * pow(i,3) + S(1) * pow(i,2) + S(2) * i + S(3);		//warning C4244: '引數' : 將 'double' 轉換為 '__w64 int'，由於型別不同，可能導致資料遺失
+			(*spline_vec)((int)i) = S(0) * pow(i,3) + S(1) * pow(i,2) + S(2) * i + S(3);
 
 		}
 
@@ -372,7 +366,7 @@ void GetSplineVec(VectorXd *spline_vec, int vec_length, int spline_type)
 		S = A.inverse() * B;
 
 		for(double i=0; i<vec_length; i++){
-			(*spline_vec)((int)i) = S(0) * pow(i,5) + S(1) * pow(i,4) + S(2) * pow(i,3) + S(3) * pow(i,2) + S(4) * i + S(5);		//warning C4244: '引數' : 將 'double' 轉換為 '__w64 int'，由於型別不同，可能導致資料遺失
+			(*spline_vec)((int)i) = S(0) * pow(i,5) + S(1) * pow(i,4) + S(2) * pow(i,3) + S(3) * pow(i,2) + S(4) * i + S(5);
 		}
 
 	}
@@ -387,9 +381,9 @@ void GetSwingVec(VectorXd *swing_vec, int vec_length)
 		(*swing_vec)(i) = -1 * pow(-(2.0/vec_length), 4) * pow((i-vec_length/2.0), 4) + 1;
 	}
 }
-void TrajectoriesWriteFile( Trajectories *trajectories )
+void WriteTrajectoryFiles( Trajectories *trajectories )
 {
-	
+	cout << "Writing trajectory files..." << endl;
 	EigenWriteFile(trajectories->zmp, "cpp_zmp", WriteFilePath);
 	EigenWriteFile(trajectories->com, "cpp_com", WriteFilePath);
 	EigenWriteFile(trajectories->left_foot, "cpp_left_foot", WriteFilePath);

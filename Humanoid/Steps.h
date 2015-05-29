@@ -16,10 +16,10 @@ const double	pi = 3.14159265;
 const double	FootLength = 20;
 const double	FootWidth = 10;
 
-// SetAllCP() Parameters
+// UpdateAllCP() Parameters
 const int		MaxPreviewSteps = 3;
 const int		CP_Offset = 5;
-// SetAllZmp() Pamameters
+// UpdateAllZmp() Pamameters
 const double	StepTime = 0.8;
 const double	GravityConst = 980.665;		// 9.80665 m/s2 = 980.665 cm/s2
 const double	ComHeight = 100;
@@ -41,10 +41,10 @@ struct Step {
 
 typedef vector<Step*> Steps;
 
-string SetFootsteps( Steps *steps );
+string CreateFootsteps( Steps *steps );
 string ReviseStepDirection( Steps *steps );
-string SetAllCP( Steps *steps );
-string SetAllZmp( Steps *steps );
+string UpdateAllCP( Steps *steps );
+string UpdateAllZmp( Steps *steps );
 void PrintAllSteps( const Steps *steps );
 
 #endif /*_STEPS_H_*/

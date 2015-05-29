@@ -20,7 +20,7 @@ struct Configurations {
 	VectorXd angle_left_hip_yaw;
 	VectorXd angle_left_hip_roll;
 	VectorXd angle_left_hip_pitch;
-	VectorXd angle_legt_knee;
+	VectorXd angle_left_knee;
 	VectorXd angle_left_ankle_pitch;
 	VectorXd angle_left_ankle_roll;
 
@@ -41,12 +41,41 @@ struct Configurations {
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	//constructor
-	Configurations();
+	Configurations( Trajectories *trajectories );
+};
+struct ForKinMatrix{
+	VectorXd m11;
+	VectorXd m12;
+	VectorXd m13;
+	VectorXd m14;
+
+	VectorXd m21;
+	VectorXd m22;
+	VectorXd m23;
+	VectorXd m24;
+
+	VectorXd m31;
+	VectorXd m32;
+	VectorXd m33;
+	VectorXd m34;
+
+	VectorXd m41;
+	VectorXd m42;
+	VectorXd m43;
+	VectorXd m44;
+
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+	//constructor
+	ForKinMatrix(double a, double alpha, double d, VectorXd *theta);
 };
 
-string SetAngleTrunkYaw( Configurations *configurations );
-string SetAngleWaist( Configurations *configurations );
+string DesignAngleTrunkYaw( Configurations *configurations );
+string DesignAngleWaist( Configurations *configurations );
 string LowerBodyInvKin( Configurations *configurations, Trajectories *trajectories );
-
+void CalAngleHipYaw( Configurations *configurations, Trajectories *trajectories );
+//VectorXd VectorBitwiseMultiply( VectorXd *v1, VectorXd *v2);
+VectorXd CosVector( VectorXd *theta);
+VectorXd SinVector( VectorXd *theta);
 
 #endif /*_KINEMATICS_H_*/
