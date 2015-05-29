@@ -3,6 +3,7 @@
 #include "Steps.h"
 #include "Trajectories.h"
 #include "Kinematics.h"
+#include "PreviewControl.h"
 using namespace std;
 
 void main()

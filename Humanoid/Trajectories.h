@@ -7,6 +7,7 @@
 #include <qpOASES.hpp>
 #include "example4CP.cpp"
 #include "Steps.h"
+#include "PreviewControl.h"
 using namespace std;
 using namespace Eigen;
 

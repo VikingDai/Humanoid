@@ -71,12 +71,14 @@
   <ItemGroup>
     <ClCompile Include="Kinematics.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PreviewControl.cpp" />
     <ClCompile Include="Steps.cpp" />
     <ClCompile Include="Trajectories.cpp" />
     <ClCompile Include="Util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Kinematics.h" />
+    <ClInclude Include="PreviewControl.h" />
     <ClInclude Include="Steps.h" />
     <ClInclude Include="Trajectories.h" />
     <ClInclude Include="Util.h" />
