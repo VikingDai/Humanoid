@@ -15,6 +15,7 @@ void main()
 	SetAllCP( &steps );
 	SetAllZmp( &steps );
 
+
 	//Trajectory Calculation
 	Trajectories trajectories( &steps );
 	
@@ -25,10 +26,14 @@ void main()
 	SetComDirection( &trajectories );
 	TrajectoriesWriteFile( &trajectories );
 
+
 	//Inverse Kinematics Calculation
 	Configurations configurations;
 
-	yoooooooooooooooooooo
+	SetAngleTrunkYaw( &configurations );
+	SetAngleWaist( &configurations );
+
+
 
 	system("pause");
 }

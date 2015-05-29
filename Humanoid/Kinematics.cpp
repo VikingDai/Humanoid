@@ -58,3 +58,29 @@ string SetAngleWaist( Configurations *configurations )
 
 	return err;
 }
+string LowerBodyInvKin( Configurations *configurations, Trajectories *trajectories )
+{
+	// TODO: Given com_direction, foot_direction
+	//		 Calculate all lower body angle
+	string err;
+	cout << "Calculating angle_waist trajectory..." << endl;
+
+	// temp acceptable solution for angle_waist 
+
+
+
+
+
+	// all lower body angle trajectory legal test
+	if(0){
+	// TODO
+	// check if all lower body angle trajectory generated is legal
+	// if not legal, set error message to err
+	}
+	else 
+		err = "SUCCESS";
+
+	return err;
+
+
+}

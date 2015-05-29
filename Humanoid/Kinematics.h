@@ -46,7 +46,7 @@ struct Configurations {
 
 string SetAngleTrunkYaw( Configurations *configurations );
 string SetAngleWaist( Configurations *configurations );
-
+string LowerBodyInvKin( Configurations *configurations, Trajectories *trajectories );
 
 
 #endif /*_KINEMATICS_H_*/

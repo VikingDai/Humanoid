@@ -342,7 +342,7 @@ void GetSplineVec(VectorXd *spline_vec, int vec_length, int spline_type)
 		S = A.inverse() * B;
 
 		for(double i=0; i<vec_length; i++){
-			(*spline_vec)(i) = S(0) * pow(i,3) + S(1) * pow(i,2) + S(2) * i + S(3);		//warning C4244: '引數' : 將 'double' 轉換為 '__w64 int'，由於型別不同，可能導致資料遺失
+			(*spline_vec)((int)i) = S(0) * pow(i,3) + S(1) * pow(i,2) + S(2) * i + S(3);		//warning C4244: '引數' : 將 'double' 轉換為 '__w64 int'，由於型別不同，可能導致資料遺失
 
 		}
 
@@ -372,7 +372,7 @@ void GetSplineVec(VectorXd *spline_vec, int vec_length, int spline_type)
 		S = A.inverse() * B;
 
 		for(double i=0; i<vec_length; i++){
-			(*spline_vec)(i) = S(0) * pow(i,5) + S(1) * pow(i,4) + S(2) * pow(i,3) + S(3) * pow(i,2) + S(4) * i + S(5);		//warning C4244: '引數' : 將 'double' 轉換為 '__w64 int'，由於型別不同，可能導致資料遺失
+			(*spline_vec)((int)i) = S(0) * pow(i,5) + S(1) * pow(i,4) + S(2) * pow(i,3) + S(3) * pow(i,2) + S(4) * i + S(5);		//warning C4244: '引數' : 將 'double' 轉換為 '__w64 int'，由於型別不同，可能導致資料遺失
 		}
 
 	}
