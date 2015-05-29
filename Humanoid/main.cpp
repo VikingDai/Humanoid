@@ -32,6 +32,7 @@ void main()
 
 	SetAngleTrunkYaw( &configurations );
 	SetAngleWaist( &configurations );
+	LowerBodyInvKin( &configurations, &trajectories );
 
 
 
