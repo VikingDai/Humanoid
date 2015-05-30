@@ -7,8 +7,8 @@ using namespace std;
 using namespace Eigen;
 
 
-const double PelvisWidth = 13.5;
-const double PelvisHeight = 11;
+const double PelvisWidth = 26;	//PelvisWidth = length from left hip to right hip
+const double PelvisHeight = 11;	//PelvisHeignt = length form hip height to waist height
 const double ThighLength = 26;
 const double ShinLength = 22;
 const double AnkleHeight = 20;
@@ -67,15 +67,19 @@ struct ForKinMatrix{
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 	//constructor
-	ForKinMatrix(double a, double alpha, double d, VectorXd *theta);
+	ForKinMatrix();
+	ForKinMatrix(double a, double alpha, double d, VectorXd& theta);
 };
 
 string DesignAngleTrunkYaw( Configurations *configurations );
 string DesignAngleWaist( Configurations *configurations );
 string LowerBodyInvKin( Configurations *configurations, Trajectories *trajectories );
 void CalAngleHipYaw( Configurations *configurations, Trajectories *trajectories );
-//VectorXd VectorBitwiseMultiply( VectorXd *v1, VectorXd *v2);
-VectorXd CosVector( VectorXd *theta);
-VectorXd SinVector( VectorXd *theta);
+
+ForKinMatrix* ForKinMatrixMultiplyMatrix( ForKinMatrix *mat1, ForKinMatrix *mat2);
+//ForKinVector ForKinMatrixMultiplyVector( ForKinMatrix *mat, ForKinMatrix *vec)
+VectorXd VectorBitwiseMultiply( VectorXd &vec1, VectorXd &vec2);
+VectorXd CosVector( VectorXd& theta);
+VectorXd SinVector( VectorXd& theta);
 
 #endif /*_KINEMATICS_H_*/

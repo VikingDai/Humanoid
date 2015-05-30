@@ -398,7 +398,7 @@ void WriteTrajectoryFiles( Trajectories *trajectories )
 	EigenWriteFile(trajectories->foot_swing_vec, "cpp_foot_swing_vec", WriteFilePath);
 
 }
-void EigenWriteFile( VectorXd vector, string file, string path )
+void EigenWriteFile( VectorXd& vector, string file, string path )
 {
 	string file_name = path + file;
 	ofstream myfile(file_name);
@@ -410,7 +410,7 @@ void EigenWriteFile( VectorXd vector, string file, string path )
 	}
 	myfile.close();
 }
-void EigenWriteFile( MatrixXd matrix, string file, string path )
+void EigenWriteFile( MatrixXd& matrix, string file, string path )
 {
 	string file_name = path + file;
 	ofstream myfile(file_name);

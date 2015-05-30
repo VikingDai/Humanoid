@@ -62,7 +62,7 @@ string DesignComDirection( Trajectories *trajectories );
 void GetSplineVec( VectorXd *spline_vec, int vec_length, int spline_type );
 void GetSwingVec( VectorXd *swing_vec, int vec_length);
 void WriteTrajectoryFiles( Trajectories *trajectories );
-void EigenWriteFile( VectorXd matrix, string file, string path );
-void EigenWriteFile( MatrixXd matrix, string file, string path );
+void EigenWriteFile( VectorXd& matrix, string file, string path );
+void EigenWriteFile( MatrixXd& matrix, string file, string path );
 
 #endif /*_TRAJECTORIES_H_*/
