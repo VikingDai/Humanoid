@@ -2,15 +2,16 @@
 
 Step::Step( bool is_right_foot, double direction, Vector2d& position )
 {
-	is_right_foot_ = is_right_foot;
-	direction_ = direction;
-	position_ = position;
-	cp_init_.setZero();
-	cp_end_.setZero();
-	zmp_des_.setZero();
+	is_right_foot_	= is_right_foot;
+	direction_		= direction;
+	position_		= position;
+
+	cp_init_		.setZero();
+	cp_end_			.setZero();
+	zmp_des_		.setZero();
 }
 
-string SetFootsteps( Steps *steps )
+string CreateFootsteps( Steps *steps )
 {
 	string err;
 	int	method;
@@ -102,7 +103,7 @@ string ReviseStepDirection( Steps *steps )
 	return err;
 
 }
-string SetAllCP( Steps *steps )
+string UpdateAllCP( Steps *steps )
 {
 	string err;
 	cout << "Calculating Cp in each footstep..." << endl;
@@ -146,7 +147,7 @@ string SetAllCP( Steps *steps )
 	return err;
 
 }
-string SetAllZmp( Steps *steps)
+string UpdateAllZmp( Steps *steps)
 {
 	string err;
 	cout << "Calculating Zmp in each footstep..." << endl;

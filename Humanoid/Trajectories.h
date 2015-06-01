@@ -24,7 +24,6 @@ const int		SinglePhaseTimeFrame = (int)(floor(SinglePhaseTime / SamplingTime));
 const int		DoublePhaseTimeFrame = (int)(floor(DoublePhaseTime / SamplingTime));
 const int		PrepareTimeFrame = (int)(floor(PrepareTime / SamplingTime));
 const int		HoldTimeFrame = (int)(floor(HoldTime / SamplingTime));
-static int		TotalTimeFrame;
 
 const int		ZmpSplineType = 5;				// 1: first order spline, 3: third order spline, 5: fifth order spline
 const int		FootTrajectorySplineType = 3;	// 1: first order spline, 3: third order spline, 5: fifth order spline
@@ -35,6 +34,8 @@ const string	WriteFilePath = "C:\\Users\\iCeiRA_7Bot\\Desktop\\Dropbox\\Matlab\\
 
 
 struct Trajectories{
+	int TotalTimeFrame;
+
 	MatrixXd zmp;
 	MatrixXd com;
 	MatrixXd left_foot;
@@ -53,15 +54,15 @@ struct Trajectories{
 	Trajectories(Steps *steps);
 };
 
-string SetZmpTrajectory( Trajectories *trajectories, Steps *steps );
-string SetFootTrajectory( Trajectories *trajectories, Steps *steps );
-string SetFootDirection( Trajectories *trajectories, Steps *steps );
-string SetComTrajectory( Trajectories *trajectories );
-string SetComDirection( Trajectories *trajectories );
+string DesignZmpTrajectory( Trajectories *trajectories, Steps *steps );
+string DesignFootTrajectory( Trajectories *trajectories, Steps *steps );
+string DesignFootDirection( Trajectories *trajectories, Steps *steps );
+string DesignComTrajectory( Trajectories *trajectories );
+string DesignComDirection( Trajectories *trajectories );
 void GetSplineVec( VectorXd *spline_vec, int vec_length, int spline_type );
 void GetSwingVec( VectorXd *swing_vec, int vec_length);
-void TrajectoriesWriteFile( Trajectories *trajectories );
-void EigenWriteFile( VectorXd matrix, string file, string path );
-void EigenWriteFile( MatrixXd matrix, string file, string path );
+void WriteTrajectoryFiles( Trajectories *trajectories );
+void EigenWriteFile( VectorXd& matrix, string file, string path );
+void EigenWriteFile( MatrixXd& matrix, string file, string path );
 
 #endif /*_TRAJECTORIES_H_*/

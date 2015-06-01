@@ -10,25 +10,31 @@ void main()
 	//Path Planning
 	Steps steps;
 
-	SetFootsteps( &steps );
+	CreateFootsteps( &steps );
 	ReviseStepDirection( &steps );
-	SetAllCP( &steps );
-	SetAllZmp( &steps );
+	UpdateAllCP( &steps );
+	UpdateAllZmp( &steps );
+
 
 	//Trajectory Calculation
 	Trajectories trajectories( &steps );
 	
-	SetZmpTrajectory( &trajectories, &steps );
-	SetFootTrajectory( &trajectories, &steps );
-	SetFootDirection( &trajectories, &steps );
-	SetComTrajectory( &trajectories );
-	SetComDirection( &trajectories );
-	TrajectoriesWriteFile( &trajectories );
+	DesignZmpTrajectory( &trajectories, &steps );
+	DesignFootTrajectory( &trajectories, &steps );
+	DesignFootDirection( &trajectories, &steps );
+	DesignComTrajectory( &trajectories );
+	DesignComDirection( &trajectories );
+	WriteTrajectoryFiles( &trajectories );
+
 
 	//Inverse Kinematics Calculation
-	Configurations configurations;
+	Configurations configurations( &trajectories );
 
-	
+	DesignAngleTrunkYaw( &configurations );
+	DesignAngleWaist( &configurations );
+	LowerBodyInvKin( &configurations, &trajectories );
+
+
 
 	system("pause");
 }
