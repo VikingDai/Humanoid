@@ -34,7 +34,7 @@ void main()
 	DesignAngleWaist( &configurations );
 	LowerBodyInvKin( &configurations, &trajectories );
 
-
+	//test
 
 	system("pause");
 }
