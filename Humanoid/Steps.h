@@ -22,7 +22,7 @@ const int		CP_Offset = 5;
 // UpdateAllZmp() Pamameters
 const double	StepTime = 0.8;
 const double	GravityConst = 980.665;		// 9.80665 m/s2 = 980.665 cm/s2
-const double	ComHeight = 100;
+const double	ComHeight = 80;
 const double	Omega = pow(GravityConst/ComHeight, 0.5);
 
 

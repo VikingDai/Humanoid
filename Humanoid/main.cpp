@@ -24,7 +24,7 @@ void main()
 	DesignFootDirection( &trajectories, &steps );
 	DesignComTrajectory( &trajectories );
 	DesignComDirection( &trajectories );
-	WriteTrajectoryFiles( &trajectories );
+	//TrajectoryWriteFiles( &trajectories );
 
 
 	//Inverse Kinematics Calculation
@@ -33,8 +33,8 @@ void main()
 	DesignAngleTrunkYaw( &configurations );
 	DesignAngleWaist( &configurations );
 	LowerBodyInvKin( &configurations, &trajectories );
+	ConfigurationWriteFiles( &configurations );
 
-	//test
 
 	system("pause");
 }

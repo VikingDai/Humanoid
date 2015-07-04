@@ -28,15 +28,15 @@ string CreateFootsteps( Steps *steps )
 			cout << "Creating straight 10 walking steps..." << endl;
 			steps->resize(10);
 			(*steps)[0] = new Step( true,	0, Vector2d(0, 0)	);
-     		(*steps)[1] = new Step( false,	0, Vector2d(0, 20)	);
-     		(*steps)[2] = new Step( true,	0, Vector2d(25, 0)	);
-     		(*steps)[3] = new Step( false,	0, Vector2d(50, 20)	);
-     		(*steps)[4] = new Step( true,	0, Vector2d(75, 0)	);
-     		(*steps)[5] = new Step( false,	0, Vector2d(100, 20));
-     		(*steps)[6] = new Step( true,	0, Vector2d(125, 0)	); 
-     		(*steps)[7] = new Step( false,	0, Vector2d(150, 20));
-			(*steps)[8] = new Step( true,	0, Vector2d(175,0)	);
-			(*steps)[9] = new Step( false,	0, Vector2d(175, 20));
+     		(*steps)[1] = new Step( false,	0, Vector2d(0, 27)	);
+     		(*steps)[2] = new Step( true,	0, Vector2d(10, 0)	);
+     		(*steps)[3] = new Step( false,	0, Vector2d(20, 27)	);
+     		(*steps)[4] = new Step( true,	0, Vector2d(30, 0)	);
+     		(*steps)[5] = new Step( false,	0, Vector2d(40, 27));
+     		(*steps)[6] = new Step( true,	0, Vector2d(50, 0)	); 
+     		(*steps)[7] = new Step( false,	0, Vector2d(60, 27));
+			(*steps)[8] = new Step( true,	0, Vector2d(70,0)	);
+			(*steps)[9] = new Step( false,	0, Vector2d(70, 27));
 			break;
 		case 2:
 			cout << "Creating curve 6 walking steps..." << endl;

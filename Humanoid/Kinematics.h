@@ -3,6 +3,7 @@
 
 #include <Eigen/Dense>
 #include "Trajectories.h"
+#include "Util.h"
 using namespace std;
 using namespace Eigen;
 
@@ -70,16 +71,34 @@ struct ForKinMatrix{
 	ForKinMatrix();
 	ForKinMatrix(double a, double alpha, double d, VectorXd& theta);
 };
+struct ForKinVector{
+	VectorXd v1;
+	VectorXd v2;
+	VectorXd v3;
+	VectorXd v4;
+
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+	//constructor
+	ForKinVector();
+	ForKinVector(MatrixXd& mat);
+};
 
 string DesignAngleTrunkYaw( Configurations *configurations );
 string DesignAngleWaist( Configurations *configurations );
 string LowerBodyInvKin( Configurations *configurations, Trajectories *trajectories );
 void CalAngleHipYaw( Configurations *configurations, Trajectories *trajectories );
-
-ForKinMatrix* ForKinMatrixMultiplyMatrix( ForKinMatrix *mat1, ForKinMatrix *mat2);
-//ForKinVector ForKinMatrixMultiplyVector( ForKinMatrix *mat, ForKinMatrix *vec)
+void CalAllLegAngle( Configurations *configurations, Trajectories *trajectories, ForKinMatrix *T_left_do, ForKinMatrix *T_right_do );
+void CalLegAngle(VectorXd *angle_hip_roll, VectorXd *angle_hip_pitch, VectorXd *angle_knee, ForKinVector* fk_ankle_new );
+void ForKinMatrixMultiplyMatrix( ForKinMatrix *mat, ForKinMatrix *mat1, ForKinMatrix *mat2);
+void ForKinMatrixMultiplyVector( ForKinVector* vec_result, ForKinMatrix* mat, ForKinVector* vec);
+void ForKinMatrixInverse( ForKinMatrix *mat_inv, ForKinMatrix *mat );
 VectorXd VectorBitwiseMultiply( VectorXd &vec1, VectorXd &vec2);
-VectorXd CosVector( VectorXd& theta);
 VectorXd SinVector( VectorXd& theta);
+VectorXd CosVector( VectorXd& theta);
+void GetArcSinVector( VectorXd& arc_sin_vec, VectorXd& vec);
+void ConfigurationWriteFiles( Configurations *configurations );
+
+
 
 #endif /*_KINEMATICS_H_*/

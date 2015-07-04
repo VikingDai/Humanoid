@@ -384,7 +384,7 @@ void GetSwingVec(VectorXd *swing_vec, int vec_length)
 		(*swing_vec)(i) = -1 * pow(-(2.0/vec_length), 4) * pow((i-vec_length/2.0), 4) + 1;
 	}
 }
-void WriteTrajectoryFiles( Trajectories *trajectories )
+void TrajectoryWriteFiles( Trajectories *trajectories )
 {
 	cout << "Writing trajectory files..." << endl;
 	EigenWriteFile(trajectories->zmp, "cpp_zmp", WriteFilePath);
@@ -400,28 +400,4 @@ void WriteTrajectoryFiles( Trajectories *trajectories )
 	EigenWriteFile(trajectories->foot_spline_vec, "cpp_foot_spline_vec", WriteFilePath);
 	EigenWriteFile(trajectories->foot_swing_vec, "cpp_foot_swing_vec", WriteFilePath);
 
-}
-void EigenWriteFile( VectorXd& vector, string file, string path )
-{
-	string file_name = path + file;
-	ofstream myfile(file_name);
-	if(!myfile.is_open()) {
-		cout << "Fail to open \"" << file_name << "\"" << endl;
-	}
-	else {
-		myfile << vector;	
-	}
-	myfile.close();
-}
-void EigenWriteFile( MatrixXd& matrix, string file, string path )
-{
-	string file_name = path + file;
-	ofstream myfile(file_name);
-	if(!myfile.is_open()) {
-		cout << "Fail to open \"" << file_name << "\"" << endl;
-	}
-	else {
-		myfile << matrix;	
-	}
-	myfile.close();
 }

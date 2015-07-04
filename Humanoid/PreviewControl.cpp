@@ -202,5 +202,4 @@ void PreviewControl(Trajectories *trajectories)
 		
 	}
 
-	cout << "Preview control complete!" << endl;
 }

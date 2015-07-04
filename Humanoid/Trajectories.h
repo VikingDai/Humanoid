@@ -1,18 +1,19 @@
 #ifndef _TRAJECTORIES_H_
 #define _TRAJECTORIES_H_
 
-#include <fstream> 
+
 #include <math.h>
 #include <Eigen/Dense>
 #include <qpOASES.hpp>
 #include "example4CP.cpp"
 #include "Steps.h"
+#include "Util.h"
 using namespace std;
 using namespace Eigen;
 
 const double	SamplingTime = 0.002;
-const double	SinglePhaseTimeRatio = 0.8;
-const double	DoublePhaseTimeRatio = 0.2;
+const double	SinglePhaseTimeRatio = 0.6;
+const double	DoublePhaseTimeRatio = 0.4;
 const double	SinglePhaseTime = StepTime * SinglePhaseTimeRatio;
 const double	DoublePhaseTime = StepTime * DoublePhaseTimeRatio;
 
@@ -61,8 +62,7 @@ string DesignComTrajectory( Trajectories *trajectories );
 string DesignComDirection( Trajectories *trajectories );
 void GetSplineVec( VectorXd *spline_vec, int vec_length, int spline_type );
 void GetSwingVec( VectorXd *swing_vec, int vec_length);
-void WriteTrajectoryFiles( Trajectories *trajectories );
-void EigenWriteFile( VectorXd& matrix, string file, string path );
-void EigenWriteFile( MatrixXd& matrix, string file, string path );
+void TrajectoryWriteFiles( Trajectories *trajectories );
+
 
 #endif /*_TRAJECTORIES_H_*/
