@@ -272,9 +272,9 @@ string DesignComTrajectory( Trajectories *trajectories )
 	cout << "Calculating Com trajectory..." << endl;
 
 	// temp acceptable solution for com 
-	/*trajectories->com.row(0) = 0.5 * (trajectories->left_foot.row(0) + trajectories->right_foot.row(0));
-	trajectories->com.row(1) = 0.5 * (trajectories->left_foot.row(1) + trajectories->right_foot.row(1));
-	trajectories->com.row(2).setConstant(ComHeight);*/
+	//trajectories->com.row(0) = 0.5 * (trajectories->left_foot.row(0) + trajectories->right_foot.row(0));
+	//trajectories->com.row(1) = 0.5 * (trajectories->left_foot.row(1) + trajectories->right_foot.row(1));
+	//trajectories->com.row(2).setConstant(ComHeight);
 
 	// preview control solution for com
 	PreviewControl(trajectories);

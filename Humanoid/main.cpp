@@ -24,7 +24,7 @@ void main()
 	DesignFootDirection( &trajectories, &steps );
 	DesignComTrajectory( &trajectories );
 	DesignComDirection( &trajectories );
-	//TrajectoryWriteFiles( &trajectories );
+	 TrajectoryWriteFiles( &trajectories );
 
 
 	//Inverse Kinematics Calculation

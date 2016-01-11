@@ -199,6 +199,11 @@ void PreviewControl(Trajectories *trajectories)
 			trajectories->com(1, i) = PC_Yp[i];
 			trajectories->com.row(2).setConstant(ComHeight);
 		}
+
+		// 不加這個會有error...
+		trajectories->com(0, 0) = trajectories->com(0, 1);
+		trajectories->com(1, 0) = trajectories->com(1, 1);
+
 		
 	}
 

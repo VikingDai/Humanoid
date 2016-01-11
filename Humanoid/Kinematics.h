@@ -8,13 +8,15 @@ using namespace std;
 using namespace Eigen;
 
 
-const double PelvisWidth = 26;	//PelvisWidth = length from left hip to right hip
+const double PelvisWidth = 27;	//PelvisWidth = length from left hip to right hip
 const double PelvisHeight = 11;	//PelvisHeignt = length form hip height to waist height
 const double ThighLength = 26;
 const double ShinLength = 22;
 const double AnkleHeight = 20;
 
 struct Configurations {
+	int TotalTimeFrame;
+
 	VectorXd angle_trunk_yaw;
 	VectorXd angle_waist;
 
@@ -44,59 +46,55 @@ struct Configurations {
 	//constructor
 	Configurations( Trajectories *trajectories );
 };
-struct ForKinMatrix{
-	VectorXd m11;
-	VectorXd m12;
-	VectorXd m13;
-	VectorXd m14;
-
-	VectorXd m21;
-	VectorXd m22;
-	VectorXd m23;
-	VectorXd m24;
-
-	VectorXd m31;
-	VectorXd m32;
-	VectorXd m33;
-	VectorXd m34;
-
-	VectorXd m41;
-	VectorXd m42;
-	VectorXd m43;
-	VectorXd m44;
-
-	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-	//constructor
-	ForKinMatrix();
-	ForKinMatrix(double a, double alpha, double d, VectorXd& theta);
-};
-struct ForKinVector{
-	VectorXd v1;
-	VectorXd v2;
-	VectorXd v3;
-	VectorXd v4;
-
-	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
-	//constructor
-	ForKinVector();
-	ForKinVector(MatrixXd& mat);
-};
+//struct ForKinMatrix{
+//	VectorXd m11;
+//	VectorXd m12;
+//	VectorXd m13;
+//	VectorXd m14;
+//
+//	VectorXd m21;
+//	VectorXd m22;
+//	VectorXd m23;
+//	VectorXd m24;
+//
+//	VectorXd m31;
+//	VectorXd m32;
+//	VectorXd m33;
+//	VectorXd m34;
+//
+//	VectorXd m41;
+//	VectorXd m42;
+//	VectorXd m43;
+//	VectorXd m44;
+//
+//	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+//
+//	//constructor
+//	ForKinMatrix();
+//	ForKinMatrix(double a, double alpha, double d, VectorXd& theta);
+//};
+//struct ForKinVector{
+//	VectorXd v1;
+//	VectorXd v2;
+//	VectorXd v3;
+//	VectorXd v4;
+//
+//	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+//
+//	//constructor
+//	ForKinVector();
+//	ForKinVector(MatrixXd& mat);
+//};
 
 string DesignAngleTrunkYaw( Configurations *configurations );
 string DesignAngleWaist( Configurations *configurations );
 string LowerBodyInvKin( Configurations *configurations, Trajectories *trajectories );
 void CalAngleHipYaw( Configurations *configurations, Trajectories *trajectories );
-void CalAllLegAngle( Configurations *configurations, Trajectories *trajectories, ForKinMatrix *T_left_do, ForKinMatrix *T_right_do );
-void CalLegAngle(VectorXd *angle_hip_roll, VectorXd *angle_hip_pitch, VectorXd *angle_knee, ForKinVector* fk_ankle_new );
-void ForKinMatrixMultiplyMatrix( ForKinMatrix *mat, ForKinMatrix *mat1, ForKinMatrix *mat2);
-void ForKinMatrixMultiplyVector( ForKinVector* vec_result, ForKinMatrix* mat, ForKinVector* vec);
-void ForKinMatrixInverse( ForKinMatrix *mat_inv, ForKinMatrix *mat );
-VectorXd VectorBitwiseMultiply( VectorXd &vec1, VectorXd &vec2);
-VectorXd SinVector( VectorXd& theta);
-VectorXd CosVector( VectorXd& theta);
-void GetArcSinVector( VectorXd& arc_sin_vec, VectorXd& vec);
+void ForKinMatrix(Matrix4d* mat, double a, double alpha, double d, double theta);
+void ForKinMatrixInverse(Matrix4d* mat_inv, Matrix4d* mat);
+void CalLegAngle(Configurations *configurations, int i, MatrixXd *left_ankle, MatrixXd *right_ankle);
+void CalAnkleAngle(Configurations *configurations, int i, MatrixXd *left_sole, MatrixXd *right_sole);
+
 void ConfigurationWriteFiles( Configurations *configurations );
 
 
